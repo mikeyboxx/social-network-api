@@ -31,7 +31,7 @@ connection.once('open', async () => {
   // console.log(response);
   // console.log(users);
 
-  // update friends arrays
+  //for every user, update friends array 
   for (let i =0; i < response.length; i++){
     const friendsArr = [];
     for (let j = i; j < response.length; j++){
@@ -42,24 +42,28 @@ connection.once('open', async () => {
 
   // for every user, generate 5 thoughts. Each thoughtText is made up of 20 random names concatenated together.
   for (let i =0; i < response.length; i++){
+    const thoughtsArr = [];
     for (let j = 0; j < 5; j++){
     
+      // generate a string of 20 random names concatenated
       let str = '';
       for (let k = 0; k < 20; k++ ){
         str += names[Math.floor(Math.random() * names.length)];
       }
       
       // create thought
-      let thought = await Thought.create(
-        {
-          thoughtText: str,
-          username: response[i].username,
-        }
-      )
+      let thought = await Thought.create({
+        thoughtText: str,
+        username: response[i].username,
+      });
+
+      // push on thoughts array
+      thoughtsArr.push(thought._id);
       
       // for each thought, generate a reaction from every user except the creator of the thought
       const reactionsArr = [];
       for (let k = i; k < response.length; k++ ){
+        // push on reactions array
         reactionsArr.push(
           {
             reactionId: new ObjectId, 
@@ -70,17 +74,19 @@ connection.once('open', async () => {
       }
       
       // update thought with an array of reactions
-      thought =  await Thought.findByIdAndUpdate(thought._id, { reactions: reactionsArr });
+      await Thought.findByIdAndUpdate(thought._id, { reactions: reactionsArr });
 
 
     }
+    // update user with array of thoughts
+    await User.findByIdAndUpdate(response[i]._id, { thoughts: thoughtsArr });
   }
 
-  const thoughts = await Thought.find({});
-
-  for (let item of thoughts){
-    console.log({id: item._id, reactions: item.reactions})
-  }
+  // // output all users
+  // const thoughts = await Thought.find({});
+  // for (let item of thoughts){
+  //   console.log({id: item._id, reactions: item.reactions})
+  // }
 
 
   process.exit(0);
