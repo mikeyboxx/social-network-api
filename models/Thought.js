@@ -53,6 +53,7 @@ const thoughtSchema = new Schema({
             return moment(this.createdAt).format('LLLL');
           }, 
         },
+    // })]
     },{_id: false})]
   },
   {
