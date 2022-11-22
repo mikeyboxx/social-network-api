@@ -51,6 +51,12 @@ userSchema.virtual('friendCount')
     return this.friends.length;
   });
 
+// Create a virtual property `thoughtCount` that retrieves the length of the user's thoughts array field on query.
+userSchema.virtual('thoughtCount')
+  .get(function () {
+    return this.thoughts.length;
+  });
+
 // Initialize our User model
 const User = model('user', userSchema);
 
