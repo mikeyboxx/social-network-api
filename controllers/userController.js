@@ -1,5 +1,4 @@
 const User = require('../models/User');
-const { ObjectId } = require('bson');
 
 module.exports = {
   getUsers(req, res) {
@@ -9,9 +8,9 @@ module.exports = {
   },
 
   getSingleUser(req, res) {
-    User.findOne({ _id: ObjectId(req.params.userId) })
-      // .select('-__v')
-      .populate('user')
+    User.findOne({ _id: req.params.userId })
+      .select('-__v')
+      .populate('friends')
       .then((user) =>
         !user
           ? res.status(404).json({ message: 'No user with that ID' })

@@ -34,7 +34,7 @@ connection.once('open', async () => {
   //for every user, update friends array 
   for (let i =0; i < response.length; i++){
     const friendsArr = [];
-    for (let j = i; j < response.length; j++){
+    for (let j = i + 1; j < response.length; j++){
       friendsArr.push(response[j]._id);
     }
     await User.findByIdAndUpdate(response[i]._id, { friends: friendsArr });
@@ -82,11 +82,11 @@ connection.once('open', async () => {
     await User.findByIdAndUpdate(response[i]._id, { thoughts: thoughtsArr });
   }
 
-  // // output all users
-  // const thoughts = await Thought.find({});
-  // for (let item of thoughts){
-  //   console.log({id: item._id, reactions: item.reactions})
-  // }
+  // output all users
+  const thoughts = await Thought.find({});
+  for (let item of thoughts){
+    console.log({id: item._id, reactions: item.reactions})
+  }
 
 
   process.exit(0);
