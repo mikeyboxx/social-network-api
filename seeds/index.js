@@ -1,6 +1,8 @@
+const { toNamespacedPath } = require('path');
 const connection = require('../config/connection');
-const {User} = require('../models');
-const getRandomName = require('./data');
+const {User, Thought} = require('../models');
+const {getRandomName, names} = require('./data');
+const { ObjectId } = require('bson');
 
 connection.on('error', (err) => err);
 
@@ -9,6 +11,7 @@ connection.once('open', async () => {
   console.log('Time:', Intl.DateTimeFormat('en-US',{dateStyle: 'long', timeStyle: 'long'}).format(new Date()));
 
   await User.deleteMany({});
+  await Thought.deleteMany({});
 
   const users = [];
 
@@ -28,12 +31,55 @@ connection.once('open', async () => {
   // console.log(response);
   // console.log(users);
 
+  // update friends arrays
   for (let i =0; i < response.length; i++){
     const friendsArr = [];
     for (let j = i; j < response.length; j++){
       friendsArr.push(response[j]._id);
     }
     await User.findByIdAndUpdate(response[i]._id, { friends: friendsArr });
+  }
+
+  // for every user, generate 5 thoughts. Each thoughtText is made up of 20 random names concatenated together.
+  for (let i =0; i < response.length; i++){
+    for (let j = 0; j < 5; j++){
+    
+      let str = '';
+      for (let k = 0; k < 20; k++ ){
+        str += names[Math.floor(Math.random() * names.length)];
+      }
+      
+      // create thought
+      let thought = await Thought.create(
+        {
+          thoughtText: str,
+          username: response[i].username,
+        }
+      )
+      
+      // for each thought, generate a reaction from every user except the creator of the thought
+      const reactionsArr = [];
+      for (let k = i; k < response.length; k++ ){
+        reactionsArr.push(
+          {
+            reactionId: new ObjectId, 
+            reactionBody: str,
+            username: response[k].username
+          }
+        )
+      }
+      
+      // update thought with an array of reactions
+      thought =  await Thought.findByIdAndUpdate(thought._id, { reactions: reactionsArr });
+
+
+    }
+  }
+
+  const thoughts = await Thought.find({});
+
+  for (let item of thoughts){
+    console.log({id: item._id, reactions: item.reactions})
   }
 
 
