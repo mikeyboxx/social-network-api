@@ -9,13 +9,20 @@ const userSchema = new Schema({
       unique: true,
       trim: true 
     },
-
+    
     email: {
       type: String,   
       required: true,
       unique: true,
-      trim: true,
-      validate: [(email)=>{},'Email is invalid!'],
+      trim: true, 
+      // validate: [
+      //   function(email){ return /^.+@(?:[\w-]+\.)+\w+$/.test(email) },
+      //   'Email is invalid!',
+      // ]
+      // validate: {
+      //   validator: function(email){return /^.+@(?:[\w-]+\.)+\w+$/.test(email)},
+      //   message: 'Email is invalid!',
+      // }
       match: [/^.+@(?:[\w-]+\.)+\w+$/, 'Email is invalid!'],
     },
 
@@ -36,6 +43,7 @@ const userSchema = new Schema({
       virtuals: true,
     },
     id: false,
+    lean: false
   }
 );
 
@@ -44,6 +52,8 @@ userSchema.virtual('friendCount')
   .get(function () {
     return this.friends.length;
   });
+
+
 
 // Initialize our User model
 const User = model('user', userSchema);
