@@ -917,8 +917,7 @@ const names = [
   'Zuriel',
   ``,
 ];
-const users = [];
 const getNamePart = () => names[Math.floor(Math.random() * names.length)];
 const getRandomName = () => `${getNamePart()}`;
 
-module.exports = getRandomName;
+module.exports = {getRandomName, names};
