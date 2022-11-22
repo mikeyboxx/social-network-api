@@ -5,7 +5,7 @@ const getRandomName = require('./data');
 connection.on('error', (err) => err);
 
 connection.once('open', async () => {
-  console.log(`Connected to mongodb://${process.env.DB_URL}:${process.env.DB_PORT}/${process.env.DB_USER}`);
+  console.log(`Connected to mongodb://${process.env.DB_URL}:${process.env.DB_PORT}/${process.env.DB_NAME}`);
   console.log('Time:', Intl.DateTimeFormat('en-US',{dateStyle: 'long', timeStyle: 'long'}).format(new Date()));
 
   await User.deleteMany({});
