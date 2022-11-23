@@ -6,7 +6,10 @@ module.exports = {
     User.find()
       .sort({_id: 1})
       .then((users) => res.json(users))
-      .catch((err) => res.status(500).json(err));
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err)
+      })
   },
 
   getSingleUser(req, res) {
@@ -19,13 +22,19 @@ module.exports = {
           ? res.status(404).json({ message: 'No user with that ID' })
           : res.json(user)
       )
-      .catch((err) => res.status(500).json(err));
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err)
+      })
   },
 
   createUser(req, res) {
     User.create(req.body)
       .then((user) => res.json(user))
-      .catch((err) => res.status(500).json(err));
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err)
+      })
   },
 
   updateUser(req, res) {
@@ -49,19 +58,18 @@ module.exports = {
     User.findOneAndDelete({ _id: req.params.userId })
       .then(async (user) => {
         if (!user) res.status(404).json({ message: 'No user with that ID' });
-
+        
         await Thought.deleteMany({ username: user.username });
-        console.log(user._id);
-        await User.updateMany(
-          { $pull: 
-            { friends: ObjectId(user._id) } 
-          }
-        );
 
-        return res.json({user, message:`User and all of this thoughts have been deleted. He has also been removed from all friends lists!`});
+        await User.updateMany({ $pull: { friends: ObjectId(user._id) } });
+
+        return res.json({user, message:`User and all of this thoughts have been deleted. He has also been removed from all friends lists!!!`});
       }
       )
-      .catch((err) => res.status(500).json(err));
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err)
+      })
   },
 
   addFriend(req, res) {
@@ -77,8 +85,8 @@ module.exports = {
       )
       .catch((err) => {
         console.log(err);
-        res.status(500).json(err);
-      });
+        res.status(500).json(err)
+      })
   },
 
   deleteFriend(req, res) {
@@ -94,7 +102,7 @@ module.exports = {
       )
       .catch((err) => {
         console.log(err);
-        res.status(500).json(err);
-      });
+        res.status(500).json(err)
+      })
   },
 };

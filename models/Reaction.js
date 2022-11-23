@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose');
 const { ObjectId } = require('mongoose').Types;
+const moment = require('moment');
 
 // Schema to create Reaction model
 const reactionSchema = new Schema(
@@ -26,11 +27,16 @@ const reactionSchema = new Schema(
       required: true,
       default: Date.now,
       get: function (date) {
-        return moment(this.createdAt).format('LLLL');
+        return moment(moment(moment.parseZone(date).local())).format('llll');
       }, 
     },
   },
-  {_id: false}
+  {
+    toJSON: {
+      getters: true
+    },
+    _id: false
+  }
 );
 
 module.exports = reactionSchema;

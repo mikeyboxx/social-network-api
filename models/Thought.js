@@ -18,18 +18,20 @@ const thoughtSchema = new Schema({
       required: true,
       default: Date.now,
       get: function (date) {
-        return moment(this.createdAt).format('LLLL');
+        return moment(moment(moment.parseZone(date).local())).format('llll');
       }, 
     },
     username: {
       type: String,   
       required: true,
     },
+    
     reactions: [reactionSchema]
   },
   {
     toJSON: {
       virtuals: true,
+      getters: true
     },
     id: false
   }
