@@ -1,4 +1,5 @@
 const {User, Thought} = require('../models');
+// const { ObjectId } = require('mongoose').Types;
 
 module.exports = {
   getThoughts(req, res) {
@@ -74,8 +75,8 @@ module.exports = {
               { new: true }
             )
       )
-      .then((user) =>
-        !user
+      .then((thought) =>
+        !thought
           ? res.status(404).json({
               message: 'Thought created but no user with this id!',
             })
@@ -86,7 +87,7 @@ module.exports = {
         res.status(500).json(err)
       })
   },
-  addReaction(req, res) {
+  createReaction(req, res) {
     Thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
       { $addToSet: {reactions: req.body} },
@@ -106,7 +107,7 @@ module.exports = {
   deleteReaction(req, res) {
     Thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
-      { $pull: {reactions: ObjectId(req.params.reactionId)} },
+      { $pull: {reactions: {reactionId: req.params.reactionId} } },
       { runValidators: true, new: true }
     )
       .then((thought) =>
