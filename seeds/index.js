@@ -11,10 +11,10 @@ connection.once('open', async () => {
   console.log('Time:', Intl.DateTimeFormat('en-US',{dateStyle: 'long', timeStyle: 'long'}).format(new Date()));
 
   // drop tables before loading
-  await User.collection.drop({});
-  await Thought.collection.drop({});
-  // await User.deleteMany({});
-  // await Thought.deleteMany({});
+  // await User.collection.drop({});
+  // await Thought.collection.drop({});
+  await User.deleteMany({});
+  await Thought.deleteMany({});
 
   const users = [];
   
