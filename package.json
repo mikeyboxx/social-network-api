@@ -7,8 +7,7 @@
   "scripts": {
     "start": "node server",
     "dev": "nodemon server",
-    "seed": "node seeds/index",
-    "heroku-postbuild": "node utils/seed.js"
+    "seed": "node seeds/index"
   },
   "dependencies": {
     "dotenv": "^16.0.3",
