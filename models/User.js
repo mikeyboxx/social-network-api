@@ -14,6 +14,7 @@ const userSchema = new Schema({
       required: true,
       unique: true,
       trim: true, 
+      match: [/^.+@(?:[\w-]+\.)+\w+$/, 'Email is invalid!'],
       // validate: [
       //   function(email){ return /^.+@(?:[\w-]+\.)+\w+$/.test(email) },
       //   'Email is invalid!',
@@ -22,7 +23,6 @@ const userSchema = new Schema({
       //   validator: function(email){return /^.+@(?:[\w-]+\.)+\w+$/.test(email)},
       //   message: 'Email is invalid!',
       // }
-      match: [/^.+@(?:[\w-]+\.)+\w+$/, 'Email is invalid!'],
     },
 
     thoughts: [{
