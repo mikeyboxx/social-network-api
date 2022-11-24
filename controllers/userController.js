@@ -2,6 +2,7 @@ const {User, Thought} = require('../models');
 const { ObjectId } = require('mongoose').Types;
 
 module.exports = {
+  // get all users and sort by _id
   getUsers(req, res) {
     User.find()
       .sort({_id: 1})
@@ -12,11 +13,12 @@ module.exports = {
       })
   },
 
+  // get one user by userId, and return all associated thoughts and friends documents
   getSingleUser(req, res) {
     User.findOne({ _id: req.params.userId })
       .select('-__v')
-      .populate('thoughts')
-      .populate('friends')
+      .populate('thoughts')  // Thought model
+      .populate('friends')   // User model
       .then((user) =>
         !user
           ? res.status(404).json({ message: 'No user with that ID' })
@@ -28,6 +30,7 @@ module.exports = {
       })
   },
 
+  // create user with contents of req.body, containing fields from User schema
   createUser(req, res) {
     User.create(req.body)
       .then((user) => res.json(user))
@@ -37,16 +40,17 @@ module.exports = {
       })
   },
 
+  // update user with contents of req.body, containing fields from User schema
   updateUser(req, res) {
     User.findOneAndUpdate(
       { _id: req.params.userId },
       { $set: req.body },
-      { runValidators: true, new: true }
+      { runValidators: true, new: true }  // return updated document
     )
       .then((user) =>
         !user
           ? res.status(404).json({ message: 'No User with this id!' })
-          : res.json(user)
+          : res.json(user) 
       )
       .catch((err) => {
         console.log(err);
@@ -54,6 +58,8 @@ module.exports = {
       });
   },
 
+  // delete user by userId, then delete all thoughts for that user
+  // remove that user from all existing friends lists
   deleteUser(req, res) {
     User.findOneAndDelete({ _id: req.params.userId })
       .then(async (user) => {
@@ -72,6 +78,7 @@ module.exports = {
       })
   },
 
+  // add user to friends collection
   addFriend(req, res) {
     User.findOneAndUpdate(
       { _id: req.params.userId },
@@ -89,6 +96,7 @@ module.exports = {
       })
   },
 
+  // delete friend from users friends collection
   deleteFriend(req, res) {
     User.findOneAndUpdate(
       { _id: req.params.userId },

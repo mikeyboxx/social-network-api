@@ -1,6 +1,6 @@
+const moment = require('moment');
 const { Schema, model } = require('mongoose');
 const { ObjectId } = require('mongoose').Types;
-const moment = require('moment');
 
 // Schema to create Reaction model
 const reactionSchema = new Schema(
@@ -9,6 +9,7 @@ const reactionSchema = new Schema(
       type: ObjectId,   
       default: new ObjectId
     },
+
     reactionBody: {
       type: String,   
       required: true,
@@ -18,10 +19,12 @@ const reactionSchema = new Schema(
         'Text must be between 1 and 280 characters!',
       ] 
     },
+
     username: {
       type: String,   
       required: true,
     },
+
     createdAt: {
       type: Date,   
       required: true,

@@ -3,8 +3,9 @@ const apiRoutes = require('./api');
 
 router.use('/api', apiRoutes);
 
+// invalid request
 router.use((req, res) => {
-  return res.status(404).send(`Wrong route! Req type: ${req.method}\tReq path: ${req.path}`);
+  return res.status(404).send(`Wrong route! \n${req.method} --- ${req.path}`);
 });
 
 module.exports = router;
