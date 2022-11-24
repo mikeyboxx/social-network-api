@@ -1,6 +1,5 @@
 const { Schema, model } = require('mongoose');
 
-
 // Schema to create User model
 const userSchema = new Schema({
     username: {
@@ -16,14 +15,6 @@ const userSchema = new Schema({
       unique: true,
       trim: true, 
       match: [/^.+@(?:[\w-]+\.)+\w+$/, 'Email is invalid!'],
-      // validate: [
-      //   function(email){ return /^.+@(?:[\w-]+\.)+\w+$/.test(email) },
-      //   'Email is invalid!',
-      // ]
-      // validate: {
-      //   validator: function(email){return /^.+@(?:[\w-]+\.)+\w+$/.test(email)},
-      //   message: 'Email is invalid!',
-      // }
     },
 
     thoughts: [{
@@ -37,8 +28,6 @@ const userSchema = new Schema({
     }],
   },
   {
-    // Mongoose supports two Schema options to transform Objects after querying MongoDb: toJSON and toObject.
-    // Here we are indicating that we want virtuals to be included with our response, overriding the default behavior
     toJSON: {
       virtuals: true,
     },
@@ -58,7 +47,6 @@ userSchema.virtual('thoughtCount')
     return this.thoughts.length;
   });
 
-// Initialize our User model
 const User = model('user', userSchema);
 
 module.exports = User;

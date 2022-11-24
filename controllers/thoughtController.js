@@ -1,7 +1,7 @@
 const {User, Thought} = require('../models');
-// const { ObjectId } = require('mongoose').Types;
 
 module.exports = {
+  // get all thoughts and sort by _id
   getThoughts(req, res) {
     Thought.find()
       .sort({_id: 1})
@@ -12,6 +12,7 @@ module.exports = {
       })
   },
 
+  // get one thought by thoughtId
   getSingleThought(req, res) {
     Thought.findOne({ _id: req.params.thoughtId })
       .then((thought) =>
@@ -25,13 +26,14 @@ module.exports = {
       })
   },
 
+  // create thought with contents of req.body, containing fields from Thought schema
   createThought(req, res) {
     Thought.create(req.body)
       .then((thought) => {
         return User.findOneAndUpdate(
           { _id: req.body.userId },
           { $addToSet: { thoughts: thought._id } },
-          { new: true }
+          { new: true } // return updated document
         );
       })
       .then((thought) =>
@@ -47,6 +49,7 @@ module.exports = {
       });
   },
 
+  // update thought with contents of req.body, containing fields from Thought schema
   updateThought(req, res) {
     Thought.findOneAndUpdate(
       { _id: req.params.thoughtId },

@@ -1,5 +1,5 @@
-const { Schema, model } = require('mongoose');
 const moment = require('moment');
+const { Schema, model } = require('mongoose');
 const reactionSchema = require('./Reaction');
 
 // Schema to create Thought model
@@ -13,6 +13,7 @@ const thoughtSchema = new Schema({
         'Text must be between 1 and 280 characters!',
       ] 
     },
+
     createdAt: {
       type: Date,   
       required: true,
@@ -21,11 +22,12 @@ const thoughtSchema = new Schema({
         return moment(moment(moment.parseZone(date).local())).format('llll');
       }, 
     },
+
     username: {
       type: String,   
       required: true,
     },
-    
+
     reactions: [reactionSchema]
   },
   {
@@ -43,7 +45,6 @@ thoughtSchema.virtual('reactionCount')
     return this.reactions.length;
   });
 
-// Initialize our Thought model
 const Thought = model('thought', thoughtSchema);
 
 module.exports = Thought;
